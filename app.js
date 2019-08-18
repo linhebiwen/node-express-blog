@@ -1,7 +1,15 @@
-const app = require('express')()
+const express = require('express')
 const bodyParser = require('body-parser')
 const route = require('./routes')
 const cors = require('cors')
+const cookieParser = require('cookie-parser')
+const session = require('express-session')
+const config = require('./config/default')
+//连接数据库
+const mongoose = require('./util/mongoose').connect(config.mongodb.url, config.mongodb.option)
+const connectMongo = require('connect-mongo')
+
+const app = express()
 
 // cors跨域
 app.use(cors())
@@ -10,9 +18,17 @@ app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 
+// 添加session会话
+const mongoStore = connectMongo(session)
+app.use(cookieParser())
+app.use(session({
+  ...config.session,
+  store: new mongoStore({ mongooseConnection: mongoose.connection })
+}))
+
 app.use('/', route)
 
-const server = app.listen(3001, 'localhost', () => {
+const server = app.listen(config.port, 'localhost', () => {
   const host = server.address().address
   const port = server.address().port
   console.log('server has started at http://%s:%s', host, port)
