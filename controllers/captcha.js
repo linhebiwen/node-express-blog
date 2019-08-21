@@ -12,11 +12,13 @@ class Captcha {
       // 验证码宽度
       width: 80,
       // 验证码高度
-      height: 30
+      height: 40,
+      // 验证码的字符是否有颜色，默认没有，如果设置了背景，则默认有
+      color: true,
+      // 验证码背景颜色
+      background: '#CDB38B'
     })
-    res.cookie('captcha', captcha.text.toLowerCase(), { maxAge: 300000, httpOnly: true })
-    res.write(String(captcha.data))
-    res.end()
+    res.json({ code: 200, data: captcha.data })
   }
 }
 
