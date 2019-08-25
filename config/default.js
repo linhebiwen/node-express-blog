@@ -1,3 +1,7 @@
+const fs = require('fs')
+const path = require('path')
+const secret = fs.readFileSync(path.join(__dirname, '../config/cert.key'))
+
 module.exports = {
   port: parseInt(process.env.PORT, 10) || 3001,
   mongodb: {
@@ -5,6 +9,12 @@ module.exports = {
     option: {
       useNewUrlParser: true
     }
+  },
+  cookie: {
+    path: '/',
+    httpOnly: true,
+    secure: false,
+    maxAge: 1000 * 60 * 60 * 24 * 30
   },
   session: {
     name: 'sid',   // 返回客户端的key的名称
@@ -16,6 +26,12 @@ module.exports = {
       httpOnly: true,
       secure: false,
       maxAge: 1000 * 60 * 60 * 24 * 30
+    }
+  },
+  token: {
+    secret: secret,
+    options: {
+      expiresIn: 1000 * 60 * 24
     }
   }
 }

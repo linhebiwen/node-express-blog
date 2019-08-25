@@ -1,7 +1,8 @@
 const mongoose = require('mongoose')
+const config = require('../config/default')
 mongoose.Promise = global.Promise
 
-exports.connect = (url, option) => {
+const connect = (url, option) => {
   console.log("mongo connect: ", url);
   mongoose.connect(url, option)
 
@@ -20,3 +21,7 @@ exports.connect = (url, option) => {
 
   return mongoose
 }
+
+connect(config.mongodb.url, config.mongodb.option)
+
+exports.mongoose = mongoose

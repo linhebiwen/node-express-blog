@@ -2,12 +2,10 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const route = require('./routes')
 const cors = require('cors')
-const cookieParser = require('cookie-parser')
-const session = require('express-session')
 const config = require('./config/default')
-//连接数据库
-const mongoose = require('./util/mongoose').connect(config.mongodb.url, config.mongodb.option)
-const connectMongo = require('connect-mongo')
+
+// 连接数据库
+require('./plugins/mongoose')
 
 const app = express()
 
@@ -17,14 +15,6 @@ app.use(cors())
 // 解析传入的body
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
-
-// 添加session会话
-const mongoStore = connectMongo(session)
-app.use(cookieParser())
-app.use(session({
-  ...config.session,
-  store: new mongoStore({ mongooseConnection: mongoose.connection })
-}))
 
 app.use('/', route)
 
