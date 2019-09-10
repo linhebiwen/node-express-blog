@@ -11,9 +11,9 @@ router.get('/', async (req, res) => {
 // 路由中间件
 router.use((req, res, next) => {
   // 任何路由信息都会执行这里面的语句
-  if (req.url !== '/user/login' && req.url !== '/user/register') {
-    if (req.headers.token) {
-      jwt.verify(req.headers.token, config.token.secret, (error, result) => {
+  if (req.url !== '/user/login' && req.url !== '/user/register' && req.url !== '/captcha/getCaptcha') {
+    if (req.cookies.token) {
+      jwt.verify(req.cookies.token, config.token.secret, (error, result) => {
         if (error) {
           res.json({ code: 1002, msg: 'token不合法', data: null })
         } else {
@@ -25,12 +25,15 @@ router.use((req, res, next) => {
       res.json({ code: 1001, msg: 'token不存在', data: null })
     }
   }
+  next()
 })
 
 // 验证码相关api
 router.get('/captcha/getCaptcha', captcha.getCatcha)
 
 // 用户相关api
+router.post('/user/register', user.register)
 router.post('/user/login', user.login)
+router.post('/user/delete', user.delete)
 
 module.exports = router

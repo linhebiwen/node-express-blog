@@ -18,7 +18,8 @@ class Captcha {
       // 验证码背景颜色
       background: '#CDB38B'
     })
-    res.json({ code: 200, data: captcha.data })
+    req.session.captcha = captcha.text
+    res.json({ code: 0, data: captcha.data })
   }
 }
 
