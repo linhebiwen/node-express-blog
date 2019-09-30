@@ -15,17 +15,18 @@ router.use((req, res, next) => {
     if (req.cookies.token) {
       jwt.verify(req.cookies.token, config.token.secret, (error, result) => {
         if (error) {
-          res.json({ code: 1002, msg: 'token不合法', data: null })
+          res.json({ code: 1002, msg: '令牌不合法, 请重新登录！', data: null })
         } else {
           // 把它交给下一个中间件，注意中间件的注册顺序是按序执行
           next()
         }
       })
     } else {
-      res.json({ code: 1001, msg: 'token不存在', data: null })
+      res.json({ code: 1001, msg: '令牌不存在, 请重新登录！', data: null })
     }
+  } else {
+    next()
   }
-  next()
 })
 
 // 验证码相关api
@@ -34,6 +35,9 @@ router.get('/captcha/getCaptcha', captcha.getCatcha)
 // 用户相关api
 router.post('/user/register', user.register)
 router.post('/user/login', user.login)
+router.post('/user/logout', user.logout)
+router.post('/user/search', user.search)
 router.post('/user/delete', user.delete)
+router.post('/user/getUserInfo', user.getUserInfo)
 
 module.exports = router

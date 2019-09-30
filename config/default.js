@@ -23,7 +23,7 @@ module.exports = {
     saveUninitialized: true,  // 初始化session时是否保存到存储, 默认为true
     cookie: {     // 返回到前端key的属性，默认值为{ path: '/', httpOnly: true, secure: false, maxAge: null }
       path: '/',
-      httpOnly: false,
+      httpOnly: true,
       secure: false,
       maxAge: 1000 * 60 * 60 * 24 * 30
     }
